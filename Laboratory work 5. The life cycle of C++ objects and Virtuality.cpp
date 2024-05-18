@@ -5,6 +5,9 @@ using namespace std;
 
 class Shape {
 public:
+    virtual string classname() {
+        return "Shape";
+    }
     virtual bool isA(const string& s) {
         return s == "Shape";
     }
@@ -16,6 +19,9 @@ public:
 
 class Triangle : public Shape {
 public:
+    string classname() {
+        return "Triangle";
+    }
     bool isA(const string& s) {
         return (s == "Triangle") || Shape::isA(s);
     }
@@ -29,6 +35,9 @@ public:
 
 class RightTriangle : public Triangle {
 public:
+    string classname() {
+        return "RightTriangle";
+    }
     bool isA(const string& s) {
         return (s == "RightTriangle") || Triangle::isA(s);
     }
@@ -36,6 +45,9 @@ public:
 
 class Rectangle : public Shape {
 public:
+    string classname() {
+        return "Rectangle";
+    }
     bool isA(const string& s) {
         return (s == "Rectangle") || Shape::isA(s);
     }
@@ -50,35 +62,69 @@ public:
     }
 };
 
+class Base {
+public:
+    Base() {
+        printf("Base()\n");
+    }
+    Base(Base* obj) {
+        printf("Base(Base* obj)\n");
+    }
+    Base(Base& obj) {
+        printf("Base(Base& obj)\n");
+    }
+    virtual ~Base() {
+        printf("~Base()\n");
+    }
+};
+
+class Desc : Base {
+public:
+    Desc() {
+        printf("Desc()\n");
+    }
+    Desc(Desc* obj) {
+        printf("Desc(Desc* obj)\n");
+    }
+    Desc(Desc& obj) {
+        printf("Desc(Desc& obj)\n");
+    }
+    ~Desc() {
+        printf("~Desc()\n");
+    }
+};
+
+void func1(Base obj) {
+    printf("func1(Base obj)\n");
+}
+
+void func2(Base* obj) {
+    printf("func2(Base* obj)\n");
+}
+
+void func3(Base& obj) {
+    printf("func3(Base& obj)\n");
+}
+
 int main()
 {
-    srand(static_cast<unsigned int>(time(0)));
+    Base b;
+    Base* pb = new Base();
+    func1(b);
+    func2(&b);
+    func3(b);
+    func1(*pb);
+    func2(pb);
+    func3(*pb);
 
-    const int size = 10;
-    Shape* shapes[size];
-    for (int i = 0; i < size; i++) {
-        int choice = rand();
-        if (choice % 3 == 0) {
-            shapes[i] = new Triangle();
-        }
-        else if (choice % 3 == 1) {
-            shapes[i] = new RightTriangle();
-        }
-        else if (choice % 3 == 2) {
-            shapes[i] = new Rectangle();
-        }
-    }
-
-    // Безопасное приведение типов вручную
-    for (int i = 0; i < size; i++) {
-        if (shapes[i]->isA("Triangle")) {
-            static_cast<Triangle*>(shapes[i])->triangleMethod();
-        }
-    }
     printf("\n");
-    // Безопасное приведение типов с использованием dynamic_cast
-    for (int i = 0; i < size; i++) {
-        Triangle* t = dynamic_cast<Triangle*>(shapes[i]);
-        if (t != nullptr) t->triangleMethod();
-    }
+
+    Desc d;
+    Desc* pd = new Desc();
+    func1(b);
+    func2(&b);
+    func3(b);
+    func1(*pb);
+    func2(pb);
+    func3(*pb);
 }
