@@ -70,7 +70,7 @@ public:
     Base(Base* obj) {
         printf("Base(Base* obj)\n");
     }
-    Base(Base& obj) {
+    Base(const Base& obj) {
         printf("Base(Base& obj)\n");
     }
     virtual ~Base() {
@@ -78,53 +78,45 @@ public:
     }
 };
 
-class Desc : Base {
-public:
-    Desc() {
-        printf("Desc()\n");
-    }
-    Desc(Desc* obj) {
-        printf("Desc(Desc* obj)\n");
-    }
-    Desc(Desc& obj) {
-        printf("Desc(Desc& obj)\n");
-    }
-    ~Desc() {
-        printf("~Desc()\n");
-    }
-};
-
-void func1(Base obj) {
-    printf("func1(Base obj)\n");
+Base func1() {
+    Base obj1;
+    return obj1;
+}
+Base* func2() {
+    Base obj2;
+    return &obj2;
+}
+Base& func3() {
+    Base obj;
+    return obj;
+}
+Base func4() {
+    Base* obj4 = new Base();
+    return *obj4;
+}
+Base* func5() {
+    Base* obj = new Base();
+    return obj;
+}
+Base& func6() {
+    Base* obj = new Base();
+    return *obj;
 }
 
-void func2(Base* obj) {
-    printf("func2(Base* obj)\n");
-}
-
-void func3(Base& obj) {
-    printf("func3(Base& obj)\n");
-}
 
 int main()
 {
-    Base b;
-    Base* pb = new Base();
-    func1(b);
-    func2(&b);
-    func3(b);
-    func1(*pb);
-    func2(pb);
-    func3(*pb);
-
+    Base obj1 = func1();
     printf("\n");
+    Base* obj2 = func2();
+    printf("\n");
+    Base& obj3 = func3();
+    printf("\n\n");
+    Base obj4 = func4();
+    printf("\n");
+    Base* obj5 = func5();
+    printf("\n");
+    Base& obj6 = func6();
 
-    Desc d;
-    Desc* pd = new Desc();
-    func1(b);
-    func2(&b);
-    func3(b);
-    func1(*pb);
-    func2(pb);
-    func3(*pb);
+
 }
