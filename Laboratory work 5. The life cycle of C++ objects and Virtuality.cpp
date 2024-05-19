@@ -86,7 +86,7 @@ void pass_object(unique_ptr<Base> obj)
     obj->someMethod();
 } // obj и объект Base (96 строчка) удаляются здесь
 
-unique_ptr<Base> pass_return_object(unique_ptr<Base> obj)
+shared_ptr<Base> pass_return_object(shared_ptr<Base> obj)
 {
     obj->someMethod();
     return obj;
@@ -94,20 +94,8 @@ unique_ptr<Base> pass_return_object(unique_ptr<Base> obj)
 
 int main()
 {
-    {
-        unique_ptr<Base> obj1 = make_unique<Base>();
-        obj1->someMethod();
-    } // obj1 и объект Base удаляются здесь
-
-    printf("\n");
-
-    unique_ptr<Base> obj2 = make_unique<Base>();
-    pass_object(move(obj2));
-    
-    printf("\n");
-
-    unique_ptr<Base> obj3 = make_unique<Base>();
-    obj3 = pass_return_object(move(obj3));
-    obj3->someMethod();
-
+    shared_ptr<Base> obj1 = make_shared<Base>();
+    obj1 = pass_return_object(obj1);
+    shared_ptr<Base> obj2 = obj1;
+    obj2->someMethod();
 }
