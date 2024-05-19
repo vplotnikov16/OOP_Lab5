@@ -73,50 +73,41 @@ public:
     Base(const Base& obj) {
         printf("Base(Base& obj)\n");
     }
+    void someMethod() {
+        printf("someMethod()\n");
+    }
     virtual ~Base() {
         printf("~Base()\n");
     }
 };
 
-Base func1() {
-    Base obj1;
-    return obj1;
-}
-Base* func2() {
-    Base obj2;
-    return &obj2;
-}
-Base& func3() {
-    Base obj;
-    return obj;
-}
-Base func4() {
-    Base* obj4 = new Base();
-    return *obj4;
-}
-Base* func5() {
-    Base* obj = new Base();
-    return obj;
-}
-Base& func6() {
-    Base* obj = new Base();
-    return *obj;
-}
+void pass_object(unique_ptr<Base> obj)
+{
+    obj->someMethod();
+} // obj и объект Base (96 строчка) удаляются здесь
 
+unique_ptr<Base> pass_return_object(unique_ptr<Base> obj)
+{
+    obj->someMethod();
+    return obj;
+}
 
 int main()
 {
-    Base obj1 = func1();
-    printf("\n");
-    Base* obj2 = func2();
-    printf("\n");
-    Base& obj3 = func3();
-    printf("\n\n");
-    Base obj4 = func4();
-    printf("\n");
-    Base* obj5 = func5();
-    printf("\n");
-    Base& obj6 = func6();
+    {
+        unique_ptr<Base> obj1 = make_unique<Base>();
+        obj1->someMethod();
+    } // obj1 и объект Base удаляются здесь
 
+    printf("\n");
+
+    unique_ptr<Base> obj2 = make_unique<Base>();
+    pass_object(move(obj2));
+    
+    printf("\n");
+
+    unique_ptr<Base> obj3 = make_unique<Base>();
+    obj3 = pass_return_object(move(obj3));
+    obj3->someMethod();
 
 }
